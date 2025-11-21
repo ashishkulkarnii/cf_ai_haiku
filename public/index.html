@@ -47,6 +47,19 @@
         padding: 1rem;
       }
 
+      /* Smooth theme transitions */
+      body,
+      header,
+      .chat-container,
+      .chat-messages,
+      .message-input,
+      #user-input,
+      #send-button,
+      #theme-toggle,
+      .message {
+        transition: background-color 250ms ease, color 250ms ease, border-color 250ms ease, box-shadow 250ms ease;
+      }
+
       header {
         position: relative;
         text-align: center;
