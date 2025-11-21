@@ -11,13 +11,27 @@ const sendButton = document.getElementById("send-button");
 const typingIndicator = document.getElementById("typing-indicator");
 
 // Chat state
-let chatHistory = [
-  {
-    role: "assistant",
-    content:
-      "### Hello there! I'm an LLM Haiku poet, here to give you a hand with your writing.\nIf you write a haiku, I'll help you refine it or suggest improvements. Let's create some beautiful poetry together!",
-  },
-];
+const STORAGE_KEY = "cf_ai_haiku_chat_history";
+
+// Load persisted chat history if available, otherwise use default welcome
+let chatHistory = (function () {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      return JSON.parse(raw);
+    }
+  } catch (e) {
+    console.warn("Could not load chat history from localStorage:", e);
+  }
+
+  return [
+    {
+      role: "assistant",
+      content:
+        "### Hello there! I'm an LLM Haiku poet, here to give you a hand with your writing.\nIf you write a haiku, I'll help you refine it or suggest improvements. Let's create some beautiful poetry together!",
+    },
+  ];
+})();
 let isProcessing = false;
 
 // Auto-resize textarea as user types
@@ -63,6 +77,7 @@ async function sendMessage() {
 
   // Add message to history
   chatHistory.push({ role: "user", content: message });
+  saveChatHistory();
 
   try {
     // Create new assistant response element
@@ -135,12 +150,13 @@ async function sendMessage() {
 
     // Add completed response to chat history
     chatHistory.push({ role: "assistant", content: responseText });
+    saveChatHistory();
   } catch (error) {
     console.error("Error:", error);
-    addMessageToChat(
-      "assistant",
-      "Sorry, there was an error processing your request.",
-    );
+    const errMsg = "Sorry, there was an error processing your request.";
+    addMessageToChat("assistant", errMsg);
+    chatHistory.push({ role: "assistant", content: errMsg });
+    saveChatHistory();
   } finally {
     // Hide typing indicator
     typingIndicator.classList.remove("visible");
@@ -173,3 +189,28 @@ function addMessageToChat(role, content) {
   // Scroll to bottom
   chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
+/**
+ * Persist chat history to localStorage. Safe no-op if storage unavailable.
+ */
+function saveChatHistory() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(chatHistory));
+  } catch (e) {
+    console.warn("Could not save chat history to localStorage:", e);
+  }
+}
+
+/**
+ * Render the current chatHistory into the UI (clears existing messages).
+ */
+function renderChatFromHistory() {
+  chatMessages.innerHTML = "";
+  for (const msg of chatHistory) {
+    addMessageToChat(msg.role, msg.content);
+  }
+  chatMessages.scrollTop = chatMessages.scrollHeight;
+}
+
+// Render persisted or default history on load
+renderChatFromHistory();
