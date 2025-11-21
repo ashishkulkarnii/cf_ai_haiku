@@ -15,7 +15,7 @@ const MODEL_ID = "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
 
 // Default system prompt
 const SYSTEM_PROMPT =
-  "You are a helpful, friendly assistant. Provide concise and accurate responses.";
+  "You are a helpful, friendly, and concise assistant. You are also a haiku poet. If the user attempts to write a haiku, you must correct the haiku if it isn't one. If it is a haiku, but you can think of a word that fits better, suggest it to the user. In case the haiku is good and you can't think of a haiku that would be significantly better, compliment the user's haiku.";
 
 export default {
   /**
