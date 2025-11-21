@@ -163,6 +163,27 @@
         background-color: var(--primary-hover);
       }
 
+      /* Clear button next to send (small, subtle) */
+      #clear-button {
+        margin-left: 0.5rem;
+        padding: 0 0.6rem;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+        line-height: 1;
+      }
+
+      #clear-button:hover {
+        background-color: rgba(0,0,0,0.04);
+      }
+
+      body.dark #clear-button {
+        border-color: rgba(255,255,255,0.06);
+        color: var(--text-color);
+      }
+
       #send-button:disabled {
         background-color: var(--text-light);
         cursor: not-allowed;
@@ -217,7 +238,7 @@
     <header>
       <h1>Haiku Sensei</h1>
       <p>Powered by Cloudflare Workers AI</p>
-      <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
+      <button id="theme-toggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
     </header>
 
     <div class="chat-container">
@@ -243,7 +264,8 @@
           rows="1"
           autofocus
         ></textarea>
-        <button id="send-button">Send</button>
+        <button id="send-button" title="Send message">Send</button>
+        <button id="clear-button" title="Clear chat history" aria-label="Clear chat history">🗑️</button>
       </div>
     </div>
 

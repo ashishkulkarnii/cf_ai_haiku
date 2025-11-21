@@ -10,12 +10,23 @@ const userInput = document.getElementById("user-input");
 const sendButton = document.getElementById("send-button");
 const typingIndicator = document.getElementById("typing-indicator");
 const themeToggle = document.getElementById("theme-toggle");
+const clearButton = document.getElementById("clear-button");
 
 // Chat state
 const STORAGE_KEY = "cf_ai_haiku_chat_history";
 const THEME_KEY = "cf_ai_haiku_theme";
 
 // Load persisted chat history if available, otherwise use default welcome
+function getDefaultHistory() {
+  return [
+    {
+      role: "assistant",
+      content:
+        "### Hello there! I'm an LLM Haiku poet, here to give you a hand with your writing.\nIf you write a haiku, I'll help you refine it or suggest improvements. Let's create some beautiful poetry together!",
+    },
+  ];
+}
+
 let chatHistory = (function () {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -25,14 +36,7 @@ let chatHistory = (function () {
   } catch (e) {
     console.warn("Could not load chat history from localStorage:", e);
   }
-
-  return [
-    {
-      role: "assistant",
-      content:
-        "### Hello there! I'm an LLM Haiku poet, here to give you a hand with your writing.\nIf you write a haiku, I'll help you refine it or suggest improvements. Let's create some beautiful poetry together!",
-    },
-  ];
+  return getDefaultHistory();
 })();
 let isProcessing = false;
 
@@ -69,6 +73,28 @@ function initTheme() {
   }
 }
 /** End theme handling **************************************************/
+
+/** Clear chat handling **************************************************/
+function clearChatHistory() {
+  if (isProcessing) return; // don't clear mid-request
+  const ok = confirm("Clear chat history? This cannot be undone.");
+  if (!ok) return;
+
+  try {
+    localStorage.removeItem(STORAGE_KEY);
+  } catch (e) {
+    console.warn("Could not remove chat history from localStorage:", e);
+  }
+
+  chatHistory = getDefaultHistory();
+  saveChatHistory();
+  renderChatFromHistory();
+}
+
+if (clearButton) {
+  clearButton.addEventListener("click", clearChatHistory);
+}
+/** End clear chat handling **********************************************/
 
 // Auto-resize textarea as user types
 userInput.addEventListener("input", function () {
