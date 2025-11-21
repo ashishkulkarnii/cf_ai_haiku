@@ -9,9 +9,11 @@ const chatMessages = document.getElementById("chat-messages");
 const userInput = document.getElementById("user-input");
 const sendButton = document.getElementById("send-button");
 const typingIndicator = document.getElementById("typing-indicator");
+const themeToggle = document.getElementById("theme-toggle");
 
 // Chat state
 const STORAGE_KEY = "cf_ai_haiku_chat_history";
+const THEME_KEY = "cf_ai_haiku_theme";
 
 // Load persisted chat history if available, otherwise use default welcome
 let chatHistory = (function () {
@@ -33,6 +35,40 @@ let chatHistory = (function () {
   ];
 })();
 let isProcessing = false;
+
+/** Theme handling **************************************************/
+function applyTheme(theme) {
+  if (theme === "dark") {
+    document.body.classList.add("dark");
+    if (themeToggle) themeToggle.textContent = "🌞";
+  } else {
+    document.body.classList.remove("dark");
+    if (themeToggle) themeToggle.textContent = "🌙";
+  }
+}
+
+function initTheme() {
+  try {
+    const saved = localStorage.getItem(THEME_KEY) || "light";
+    applyTheme(saved);
+  } catch (e) {
+    applyTheme("light");
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener("click", () => {
+      const isDark = document.body.classList.contains("dark");
+      const next = isDark ? "light" : "dark";
+      applyTheme(next);
+      try {
+        localStorage.setItem(THEME_KEY, next);
+      } catch (e) {
+        /* ignore */
+      }
+    });
+  }
+}
+/** End theme handling **************************************************/
 
 // Auto-resize textarea as user types
 userInput.addEventListener("input", function () {
@@ -213,4 +249,6 @@ function renderChatFromHistory() {
 }
 
 // Render persisted or default history on load
+// Initialize theme first to avoid flash
+initTheme();
 renderChatFromHistory();

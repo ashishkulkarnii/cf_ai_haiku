@@ -6,14 +6,28 @@
     <title>Haiku Sensei</title>
     <style>
       :root {
-        --primary-color: #f6821f;
-        --primary-hover: #e67e22;
+        /* Sakura (Japanese cherry blossom) palette */
+        --primary-color: #ffb7c5; /* soft sakura pink */
+        --primary-hover: #ff8fa3; /* slightly deeper pink */
         --light-bg: #f9fafb;
         --border-color: #e5e7eb;
         --text-color: #1f2937;
         --text-light: #6b7280;
-        --user-msg-bg: #fff2e6;
-        --assistant-msg-bg: #f3f4f6;
+        --user-msg-bg: #fff2f2;
+        --assistant-msg-bg: #fff5f7;
+      }
+
+      /* Dark mode overrides (applied by adding `dark` to <body>) */
+      body.dark {
+        --primary-color: #ffb7c5;
+        --primary-hover: #ff8fa3;
+        --light-bg: #071026; /* deep navy for contrast */
+        --border-color: #122033;
+        --text-color: #e6eef6;
+        --text-light: #9fb0c2;
+        --user-msg-bg: #122435;
+        --assistant-msg-bg: #0b1a2a;
+        background-color: var(--light-bg);
       }
 
       * {
@@ -34,6 +48,7 @@
       }
 
       header {
+        position: relative;
         text-align: center;
         margin-bottom: 2rem;
         padding: 1rem 0;
@@ -43,6 +58,29 @@
       h1 {
         font-size: 1.5rem;
         color: var(--primary-color);
+      }
+
+      /* Theme toggle button (top-right) */
+      #theme-toggle {
+        position: absolute;
+        right: 1rem;
+        top: 1rem;
+        background: transparent;
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        width: 40px;
+        height: 40px;
+        border-radius: 999px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        font-size: 18px;
+      }
+
+      body.dark #theme-toggle {
+        border-color: rgba(255,255,255,0.08);
+        color: var(--text-color);
       }
 
       .chat-container {
@@ -140,6 +178,7 @@
     <header>
       <h1>Haiku Sensei</h1>
       <p>Powered by Cloudflare Workers AI</p>
+      <button id="theme-toggle" aria-label="Toggle theme">🌙</button>
     </header>
 
     <div class="chat-container">
