@@ -155,6 +155,32 @@
         cursor: not-allowed;
       }
 
+      /* Dark-mode input area styles */
+      body.dark .message-input {
+        background-color: #071026;
+        border-top: 1px solid var(--border-color);
+      }
+
+      body.dark #user-input {
+        background-color: #0b2a3a;
+        color: var(--text-color);
+        border: 1px solid rgba(255,255,255,0.06);
+      }
+
+      body.dark #user-input::placeholder {
+        color: var(--text-light);
+      }
+
+      body.dark #send-button {
+        background-color: var(--primary-hover);
+        color: #111;
+      }
+
+      body.dark #send-button:disabled {
+        background-color: rgba(255,255,255,0.06);
+        color: var(--text-light);
+      }
+
       .typing-indicator {
         display: none;
         margin-bottom: 1rem;
